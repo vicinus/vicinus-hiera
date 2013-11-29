@@ -187,7 +187,7 @@ apache::area_monitoring_nrpe::resources:
   nrpe::plugin:
     'apache_procs':
       check_command: 'check_procs'
-      command_args: '--ereg-argument-array='^/usr/sbin/apache2' -w 4:200 -c 2:250'
+      command_args: "--ereg-argument-array='^/usr/sbin/apache2' -w 4:200 -c 2:250"
     'apache_status':
       check_command: 'check_apapche_status'
       command_args: '-H localhost'
