@@ -1,4 +1,4 @@
-hiera
+﻿hiera
 =====
 
 Alternative puppet hiera connector. Design goals:
@@ -10,7 +10,7 @@ Alternative puppet hiera connector. Design goals:
 
 Configuration are structured via "hiera modules".
 
-Hiera modules are absolut independent from puppet modules. Often there is a one to one relationship between a hiera module a puppet module because the hiera module is used to configure the puppet module. But hiera modules without a correspodening puppet module or multiple hiera modules for one puppet module are also common. For example we have a mysqlserver hiera module and a mysqlclient hiera module which both configure the mysql puppet module
+Hiera modules are absolute independent from puppet modules. Often there is a one to one relationship between a hiera module a puppet module because the hiera module is used to configure the puppet module. But hiera modules without a corresponding puppet module or multiple hiera modules for one puppet module are also common. For example we have a mysqlserver hiera module and a mysqlclient hiera module which both configure the mysql puppet module.
 
 ### Hiera lookups
 Hiera lookups take the following form:
@@ -30,9 +30,9 @@ At the moment the following hiera lookup types are defined:
 
 The term _resource_ is used for all kind of resources, including classes.
 
-In all expamples the yaml backend is used for easy readablity. But all other hiera backends also work. As long as they support deeper merging.
+In all examples the yaml backend is used for easy readability. But all other hiera backends also work. As long as they support deeper merging.
 
-The merge behaviour deeper is used. 
+The merge behavior deeper is used. 
 
 
 ## Main Feature "Hiera Modules":
@@ -235,12 +235,12 @@ adminusers::default_mapping::from_user_to_ssh_authorized_key:
   ensure: 'ensure'
 ```
 
-By default only the ensure attribute is mapped from the parent resource to the subresource. But it is possible to map other attributes as well vie the _default_mapping_ key. It is possible to map a attribute af the parent resource to multiple attributes in the subresource. Also values can be transformed as show above.
+By default only the ensure attribute is mapped from the parent resource to the subresource. But it is possible to map other attributes as well vie the _default_mapping_ key. It is possible to map a attribute of the parent resource to multiple attributes in the subresource. Also values can be transformed as show above.
 There are some limitations which attributes can be mapped from parent to subresources:
 
 1. Only in hiera defined attributes can be mapped. Default values set by the resource can't because they aren't known at the time the mapping take place.
 2. It isn't possible to transform values of the subresource
-3. The mapped parent values are added as default values at creation to the subresource, so it't possible to override them by explecitly setting them in the subresource
+3. The mapped parent values are added as default values at creation to the subresource, so isn't possible to override them by explicitly setting them in the subresource
 
 ## Feature: Default subresources for resource types
 
