@@ -86,13 +86,13 @@ modules:
 
 apache::resources:
   class_params:
-    apache:
+    'apache':
       keepalive: false
-      serveradmin: hostmaster@example.com
+      serveradmin: 'hostmaster@example.com'
   apache::vhosts:
     'www.example.com'
       servername: 'www.example.com'
-      docroot: /var/www/exmaple.com
+      docroot: '/var/www/exmaple.com'
  
 webserver::resources:
   file:
@@ -129,8 +129,8 @@ apache::resources:
     'apache'
       purge_configs: true
       default_vhost: false
-      serveradmin: webmaster@example.com
-      mpm_module: prefork
+      serveradmin: 'webmaster@example.com'
+      mpm_module: 'prefork'
 ```
 
 
@@ -149,23 +149,23 @@ _modules/apache.yaml_
 ```yaml
 apache::areas:
   - 'osf_%{::osfamily}'
-  - 'monitoring_%{::monitoring}
+  - 'monitoring_%{::monitoring}'
 
 apache::resources:
   class:
-    -apache
+    - apache
   class_params:
     'apache'
       purge_configs: true
       default_vhost: false
-      serveradmin: webmaster@example.com
-      mpm_module: prefork
+      serveradmin: 'webmaster@example.com'
+      mpm_module: 'prefork'
 
 apache::area_osf_Debian::resources:
   file:
     '/etc/apache2/conf.d/additional.conf':
       ensure: present
-      owner: root
+      owner: 'root'
       content: |
         BrowserMatch "check\_http"     dontlog
 
@@ -173,7 +173,7 @@ apache::area_osf_Redhat::resources:
   file:
     '/etc/httpd/conf.d/additional.conf':
       ensure: present
-      owner: root
+      owner: 'root'
       content: |
         BrowserMatch "check\_http"     dontlog
 
@@ -185,11 +185,12 @@ apache::area_monitoring_nrpe::resources:
     perl:
       ensure: present
   nrpe::plugin:
-    apache_procs:
-      check_command: check_procs
-      command_args: --ereg-argument-array='^/usr/sbin/apache2' -w 4:200 -c 2:250    apache_status:
-      check_command: check_apapche_status
-      command_args: -H localhost
+    'apache_procs':
+      check_command: 'check_procs'
+      command_args: '--ereg-argument-array='^/usr/sbin/apache2' -w 4:200 -c 2:250'
+    'apache_status':
+      check_command: 'check_apapche_status'
+      command_args: '-H localhost'
 ```
 
 _modules/nrpe.yaml_
@@ -201,9 +202,9 @@ nrpe::resources:
     'nrpe':
       allowed_hosts: 'mon.example.com'
   nrpe::plugin:
-    load:
-      check_command: check_load
-      command_args: -w 4,3,2 -c 5,4,3
+    'load':
+      check_command: 'check_load'
+      command_args: '-w 4,3,2 -c 5,4,3'
 ```
 
 ## Feature: Subresources
@@ -218,19 +219,19 @@ _modules/user.yaml_
 ```yaml
 user::resources:
   'doe':
-    comment: John Doe
+    comment: 'John Doe'
     ensure: present
     uid: 1000
     subresources:
       ssh_authorized_key:
         key1:
-          type: ssh-rsa
+          type: 'ssh-rsa'
           key: 'AAA[..]=='
 
 adminusers::default_mapping::from_user_to_ssh_authorized_key:
   title: 
     user:
-    target: /etc/ssh/authorized_key/&{title}
+    target: '/etc/ssh/authorized_key/&{title}'
   ensure: 'ensure'
 ```
 
