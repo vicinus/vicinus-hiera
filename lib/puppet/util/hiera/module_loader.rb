@@ -10,7 +10,10 @@ end
 module Puppet::Util::Hiera
 class ModuleLoader
   class << self
-    undef_method :new
+    if defined? @@undef_new
+      undef_method :new
+      @@undef_new = 1
+    end
     attr_reader :scope
     attr_reader :compiler
     attr_reader :hiera_scope
