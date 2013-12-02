@@ -43,7 +43,6 @@ class ModuleLoader
       @hiera_subresources_name = function_hiera('hiera::subresources_name', 'subresources')
       @hiera_default_subresources_name = function_hiera('hiera::default_subresources_name', 'default_subresources')
       @hiera_defaults_name = function_hiera('hiera::defaults_name', 'defaults')
-      @hiera_default_values_name = function_hiera('hiera::default_values_name', 'default_values')
       @hiera_class_params_name = function_hiera('hiera::class_params_name', 'class_params')
       @hiera_default_mapping_name = function_hiera('hiera::default_mapping_name', 'default_mapping')
       @hiera_update_resources_name = function_hiera('hiera::update_resources_name', 'update_resources')
