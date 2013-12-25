@@ -129,6 +129,18 @@ class ModuleLoader
       @scope.function_override_resource([res_type, res_name, res_data])
     end
 
+    def realize_resources(query, res_type, type)
+      case type
+      when "exported"
+        debug("realize_resources: #{res_type.split("::").collect { |s| s.capitalize }.join("::")} <<| #{query} |>>")
+      when "virtual"
+        debug("realize_resources: #{res_type.split("::").collect { |s| s.capitalize }.join("::")} <| #{query} |>")
+      else
+        debug("realize_resources: Unknown Collection query type #{type}")
+      end
+      @scope.function_realize_resources([query, res_type, type])
+    end
+
     def debug(msg)
       Puppet.debug("hiera_module() #{@hiera_scope.get_hiera_name()}: #{msg}")
     end
