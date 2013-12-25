@@ -22,7 +22,6 @@ class ModuleLoader
     attr_reader :hiera_require_name
     attr_reader :hiera_resources_name
     attr_reader :hiera_class_params_name
-    attr_reader :hiera_update_resources_name
     attr_reader :hiera_defaults_name
     attr_reader :hiera_default_mapping_name
     attr_reader :hiera_subresources_name
@@ -45,9 +44,6 @@ class ModuleLoader
       @hiera_defaults_name = function_hiera('hiera::defaults_name', 'defaults')
       @hiera_class_params_name = function_hiera('hiera::class_params_name', 'class_params')
       @hiera_default_mapping_name = function_hiera('hiera::default_mapping_name', 'default_mapping')
-      @hiera_update_resources_name = function_hiera('hiera::update_resources_name', 'update_resources')
-
-      @toupdate_resources = {}
     end
 
     def function_hiera(key, default, override=nil, type=:priority)
@@ -67,32 +63,6 @@ class ModuleLoader
       end
     end
 
-    def add_update_resources(res)
-      res ||= {}
-      res.each do | key, value |
-        if @toupdate_resources[key]
-          @toupdate_resources[key].merge(value)
-        else
-          @toupdate_resources[key] = value
-        end
-      end
-    end
- 
-    def update_resources()
-      @toupdate_resources.each do | res_type, res_data |
-        res_data.each do | res_name, res_params |
-          if resource = @scope.findresource("#{res_type}[#{res_name}]")
-            debug("update resource: #{res_type}[#{res_name}]");
-            res_params.each do | param, value |
-              resource[param] = value
-            end
-          else
-            Puppet.warning("Couldn't find resource '#{res_type}[#{res_name}]' for update, so nothing done!")
-          end
-        end
-      end
-    end
- 
     def hiera_lookup(lookup, default, override, type)
       HieraPuppet.lookup(@hiera_scope.get_hiera_lookup_name(lookup),
           default, @hiera_scope, override, type)
@@ -195,7 +165,6 @@ class ModuleLoader
         debug("Load stage: #{stage}.")
         start_anchor = load_stage(stage, start_anchor, modulestoload[stage])
       end
-      update_resources()
       res = {}
       @modules.each do |k,v|
         res[k] = 1

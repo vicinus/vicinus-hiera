@@ -72,11 +72,6 @@ class Module
     ModuleLoader.debug(msg)
   end
 
-
-  def store_update_resources(res={})
-    ModuleLoader.add_update_resources(res)
-  end
-
   def get_res_type_defaults(res_type, parent_resource)
     res_type_defaults = ModuleLoader.hiera_lookup_hash("#{ModuleLoader.hiera_defaults_name}::#{res_type}", {})
     if parent_resource
@@ -122,6 +117,11 @@ class Module
       default_subresources = ModuleLoader.hiera_lookup_hash("#{ModuleLoader.hiera_default_subresources_name}::#{res_type}", {})
       res_params.each do | res_name, res_data |
         debug("res_name: #{res_name} (#{res_data.inspect})")
+        # Override resource if resource type is capitialized:
+        if res_type =~ /^[A-Z]/
+          ModuleLoader.override_resource(res_type, res_name, res_data)
+          next
+        end
         subresources = res_data.delete(ModuleLoader.hiera_subresources_name) {{}}
         update_dependencies(res_data, parent_resource)
         ModuleLoader.create_resource(res_type, get_act_resource_name(res_name, parent_resource), res_data, res_type_defaults)
@@ -144,9 +144,6 @@ class Module
     # 1. load classes:
     load_classes(resources.delete('class'), 
         resources.delete(ModuleLoader.hiera_class_params_name))
-
-    # 3. remove resource updates:
-    store_update_resources(resources.delete(ModuleLoader.hiera_update_resources_name))
 
     # 2. load the remaining non classes:
     internal_load_resources(resources)
