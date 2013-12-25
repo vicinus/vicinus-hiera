@@ -141,7 +141,7 @@ class Module
 
   def realize_resources(collection)
     collection.each do | res_type, col_params |
-      ModuleLoader.realize_resources(col_params['query'], res_type, col_params[
+      ModuleLoader.realize_resources(col_params['query'], res_type, col_params['type'])
     end
   end
 
