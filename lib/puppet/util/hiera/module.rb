@@ -139,6 +139,12 @@ class Module
     end
   end
 
+  def realize_resources(collection)
+    collection.each do | res_type, col_params |
+      ModuleLoader.realize_resources(col_params['query'], res_type, col_params[
+    end
+  end
+
   def load_resources()
     resources = ModuleLoader.hiera_lookup_hash(ModuleLoader.hiera_resources_name, {})
     # 1. load classes:
@@ -147,6 +153,9 @@ class Module
 
     # 2. load the remaining non classes:
     internal_load_resources(resources)
+
+    # 3. realize resources:
+    realize_resources(ModuleLoader.hiera_lookup_hash(ModuleLoader.hiera_collection_name, {}))
   end
 
   def load_areas_resources()

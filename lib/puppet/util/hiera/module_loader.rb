@@ -26,6 +26,7 @@ class ModuleLoader
     attr_reader :hiera_default_mapping_name
     attr_reader :hiera_subresources_name
     attr_reader :hiera_default_subresources_name
+    attr_reader :hiera_collection_name
 
     def init(scope, compiler)
       @modules = {}
@@ -44,6 +45,7 @@ class ModuleLoader
       @hiera_defaults_name = function_hiera('hiera::defaults_name', 'defaults')
       @hiera_class_params_name = function_hiera('hiera::class_params_name', 'class_params')
       @hiera_default_mapping_name = function_hiera('hiera::default_mapping_name', 'default_mapping')
+      @hiera_collection_name = function_hiera('hiera::collection_name', 'collection')
     end
 
     def function_hiera(key, default, override=nil, type=:priority)
