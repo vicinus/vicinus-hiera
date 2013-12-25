@@ -124,6 +124,11 @@ class ModuleLoader
       @scope.function_create_resources([res_type, { res_name => res_data }, res_defaults])
     end
 
+    def override_resource(res_type, res_name, res_data)
+      debug("override_resource: #{res_type}[#{res_name}] (#{res_data.inspect})")
+      @scope.function_override_resource([res_type, res_name, res_data])
+    end
+
     def debug(msg)
       Puppet.debug("hiera_module() #{@hiera_scope.get_hiera_name()}: #{msg}")
     end
