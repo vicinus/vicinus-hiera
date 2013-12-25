@@ -82,8 +82,6 @@ class ModuleLoader
       end
     end
 
-
-
     def hiera_lookup_array(lookup, default, override=nil)
       hiera_lookup(lookup, default, override, :array, false)
     end
