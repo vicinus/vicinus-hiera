@@ -65,17 +65,31 @@ class ModuleLoader
       end
     end
 
-    def hiera_lookup(lookup, default, override, type)
-      HieraPuppet.lookup(@hiera_scope.get_hiera_lookup_name(lookup),
-          default, @hiera_scope, override, type)
+    def hiera_lookup(lookup, default, override, type, add_sub)
+      if add_sub and type == :hash
+        res = {}
+        
+        @hiera_scope.get_hiera_lookup_names(lookup).reverse.each do |l|
+          data = HieraPuppet.lookup(l, default, @hiera_scope,
+              override, type)
+          debug("lookup parents #{l}: #{data.inspect}")
+          merge_answer(res, data)
+        end
+        return res
+      else
+        HieraPuppet.lookup(@hiera_scope.get_hiera_lookup_name(lookup),
+            default, @hiera_scope, override, type)
+      end
     end
+
+
 
     def hiera_lookup_array(lookup, default, override=nil)
-      hiera_lookup(lookup, default, override, :array)
+      hiera_lookup(lookup, default, override, :array, false)
     end
 
-    def hiera_lookup_hash(lookup, default, override=nil)
-      hiera_lookup(lookup, default, override, :hash)
+    def hiera_lookup_hash(lookup, default, add_sub=false, override=nil)
+      hiera_lookup(lookup, default, override, :hash, add_sub)
     end
 
     def load_class(name, params, lazy=false)

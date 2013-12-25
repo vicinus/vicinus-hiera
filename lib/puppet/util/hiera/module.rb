@@ -21,6 +21,13 @@ class Module
     return @name
   end
 
+  def get_hiera_names()
+    res = []
+    res << "#{@name}::area_#{@active_area}" if @active_area
+    res << @name
+    return res
+  end
+
   def get_required_unloaded_modules()
     load_areas();
     required_module_names = load_required_module_names()
@@ -73,13 +80,13 @@ class Module
   end
 
   def get_res_type_defaults(res_type, parent_resource)
-    res_type_defaults = ModuleLoader.hiera_lookup_hash("#{ModuleLoader.hiera_defaults_name}::#{res_type}", {})
+    res_type_defaults = ModuleLoader.hiera_lookup_hash("#{ModuleLoader.hiera_defaults_name}::#{res_type}", {}, true)
+    debug("defaults for resource #{res_type}: #{res_type_defaults.inspect}")
     if parent_resource
-      debug("defaults before mapping: " + res_type_defaults.inspect)
       defaults_mapping = ModuleLoader.hiera_lookup_hash("#{ModuleLoader.hiera_default_mapping_name}::from_#{parent_resource.type()}_to_#{res_type}" , { 'ensure' => 'ensure' })
-      debug("default mapping: " + defaults_mapping.inspect)
+      debug("default mapping for resource #{res_type}: #{defaults_mapping.inspect}")
       parent_resource.update_defaults(res_type_defaults, defaults_mapping)
-      debug("defaults after mapping: " + res_type_defaults.inspect)
+      debug("defaults after mapping for resource #{res_type}: #{res_type_defaults.inspect}")
     end
     res_type_defaults
   end

@@ -32,6 +32,15 @@ class Scope
     end
   end
 
+  def get_hiera_lookup_names(lookup)
+    res = @hiera_module.get_hiera_names().map{|v| "#{v}::#{lookup}"}
+    if @stage_name != 'default'
+      res.map!{|v| "#{@stage_name}::#{v}"}
+      res << "#{@stage_name}::#{lookup}"
+    end
+    res << lookup
+  end
+
   def [](key)
     if key == HIERA_MODULE_NAME and @hiera_module
       ans = get_hiera_module_name()
