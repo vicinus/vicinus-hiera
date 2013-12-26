@@ -22,9 +22,10 @@ At the moment the following hiera lookup types are defined:
 
   - require
   - resources
-  - areas
+  - defaults
   - default_subresources
   - default_mapping
+  - collection
 
 ### Term definition
 
@@ -133,6 +134,34 @@ apache::resources:
       mpm_module: 'prefork'
 ```
 
+## Feature: Virtual and Exported resources
+
+Virtual and exported resources can be defined as in puppet. Prefix one @ for virtual resources and two @@ for exported resources to the resource type.
+
+Realizing the virtual and exported resources is done by collections as in puppet described later.
+
+### Example
+
+Define a virtual user:
+
+_modules/users.yaml_
+```yaml
+users::resources:
+  @user:
+    'luke':
+      uid: 1000
+```
+
+Define to export sshkey resource:
+
+_modules/standard.yaml_
+```yaml
+standard::resources:
+  @@sshkey:
+    %{::fqdn}:
+      type: 'ssh-rsa'
+      key: %{::sshrsakey}
+```
 
 ## Feature: Hiera Module Areas
 
@@ -205,6 +234,53 @@ nrpe::resources:
     'load':
       check_command: 'check_load'
       command_args: '-w 4,3,2 -c 5,4,3'
+```
+
+## Feature: default values
+
+Default values can be set for every resource type expect classes. They will be added as default values to the create resources call, so they only work for in hiera defined resources and not for resources created by loaded classes etc. It's possible to set default values at different levels:
+
+1. Global for all modules
+2. Local for a specific module
+3. Local for a specific module area
+
+If at different level default values for the same resource type are defined, then they get merged with priority to the most specialized definition.
+
+### Example
+
+Globally define that all files created by the file resource are owned by root if nothing other is configured:
+
+_global.yaml_
+```yaml
+defaults::file:
+  owner: root
+  group: root
+```
+
+## Feature: Collections
+
+Collections are used to realize virtual or exported resources. This should be handled in puppet modules in my opinion, but as we don't live in a perfect world with only perfect puppet modules, it can be sometimes necessary to realize resources in the node configuration.
+
+### Example
+
+Realize all exported sshkey resources:
+
+_modules/standard.yaml_
+```yaml
+standard::collection:
+  sshkey:
+    type: exported
+    query: ''
+```
+
+Realize all virtual resources with tag admin:
+
+_role/webserver.yaml_
+```yaml
+standard::collection:
+  user:
+    type: virtual
+    query: 'tag == "admin"'
 ```
 
 ## Feature: Subresources
