@@ -127,7 +127,7 @@ apache::resources:
   class:
     - apache
   class_params:
-    'apache'
+    apache:
       purge_configs: true
       default_vhost: false
       serveradmin: 'webmaster@example.com'
